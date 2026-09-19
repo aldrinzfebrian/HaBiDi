@@ -1,0 +1,924 @@
+:root {
+  --bg-deep: #2b0f1e;
+  --bg-alt: #3d1830;
+  --gold: #e8b4c0;
+  --gold-deep: #d68fa0;
+  --rose: #ff7a9c;
+  --rose-deep: #c2456b;
+  --cream: #fff3f6;
+  --muted: #e3b8c6;
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'Work Sans', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at top, #46173a 0%, #260f24 60%, #150714 100%);
+  color: var(--cream);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* subtle film-grain overlay, keeps the pink from looking flat/candy */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* botanical corner ornaments — rose vine with a small heart bud.
+   Two bold ones anchor top-left / bottom-right like an invitation card;
+   two quieter, smaller echoes sit in the other corners so it reads as a
+   frame around the content rather than four competing focal points. */
+body::before,
+body::after,
+.grain::before,
+.grain::after {
+  content: '';
+  position: fixed;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23e8b4c0' stroke-width='2' stroke-linecap='round' opacity='0.7'%3E%3Cpath d='M10,210 C40,160 20,120 60,90 C90,68 70,30 110,10'/%3E%3Cpath d='M60,90 C75,80 90,85 95,70'/%3E%3Cpath d='M60,90 C50,105 35,105 25,120'/%3E%3Cpath d='M30,150 C40,145 48,150 50,140'/%3E%3Cpath d='M85,40 C95,35 100,40 105,30'/%3E%3C/g%3E%3Cg fill='%23ff9db3' opacity='0.65'%3E%3Ccircle cx='95' cy='68' r='9'/%3E%3Ccircle cx='88' cy='60' r='6'/%3E%3Ccircle cx='101' cy='59' r='6'/%3E%3C/g%3E%3Cg fill='%23e8b4c0' opacity='0.6'%3E%3Ccircle cx='60' cy='90' r='7'/%3E%3Ccircle cx='54' cy='84' r='5'/%3E%3Ccircle cx='66' cy='83' r='5'/%3E%3C/g%3E%3Cg fill='%23e8b4c0' opacity='0.6'%3E%3Ccircle cx='50' cy='140' r='6'/%3E%3Ccircle cx='45' cy='135' r='4'/%3E%3Ccircle cx='55' cy='135' r='4'/%3E%3C/g%3E%3Cg fill='%23e8b4c0' opacity='0.55'%3E%3Ccircle cx='105' cy='30' r='5'/%3E%3Ccircle cx='100' cy='25' r='3.5'/%3E%3Ccircle cx='110' cy='25' r='3.5'/%3E%3C/g%3E%3Cpath d='M111,7 c4,-6 12,-6 14,0 c2,6 -4,12 -7,14 c-3,-2 -9,-8 -7,-14z' fill='%23ff7a9c' opacity='0.65'/%3E%3Cpath d='M22,175 c3,-5 9,-5 10,0 c1,5 -3,9 -5,10 c-2,-1 -7,-5 -5,-10z' fill='%23ff7a9c' opacity='0.55'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* bold anchors */
+body::before {
+  top: -20px; left: -20px;
+  width: 280px; height: 280px;
+}
+body::after {
+  bottom: -20px; right: -20px;
+  width: 280px; height: 280px;
+  transform: rotate(180deg);
+}
+
+/* quieter echoes in the other two corners */
+.grain::before {
+  top: -30px; right: -30px;
+  width: 170px; height: 170px;
+  transform: scaleX(-1);
+  opacity: 0.55;
+}
+.grain::after {
+  bottom: -30px; left: -30px;
+  width: 170px; height: 170px;
+  transform: rotate(180deg) scaleX(-1);
+  opacity: 0.55;
+}
+
+@media (max-width: 480px) {
+  body::before, body::after { width: 190px; height: 190px; }
+  .grain::before, .grain::after { width: 120px; height: 120px; }
+}
+
+/* a few drifting hearts in the background — one quiet ambient moment, not confetti */
+.floaters {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.floaters span {
+  position: absolute;
+  bottom: -40px;
+  font-size: 18px;
+  color: var(--rose-deep);
+  opacity: 0.35;
+  animation: drift-up linear infinite;
+}
+.floaters span:nth-child(1) { left: 8%;  font-size: 0; animation-duration: 16s; animation-delay: 0s; }
+.floaters span:nth-child(2) { left: 22%; font-size: 0; animation-duration: 22s; animation-delay: 3s; }
+.floaters span:nth-child(3) { left: 48%; font-size: 0; animation-duration: 18s; animation-delay: 6s; }
+.floaters span:nth-child(4) { left: 68%; font-size: 0; animation-duration: 24s; animation-delay: 1s; }
+.floaters span:nth-child(5) { left: 85%; font-size: 0; animation-duration: 19s; animation-delay: 8s; }
+
+@keyframes drift-up {
+  from { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.35; }
+  90%  { opacity: 0.2; }
+  to   { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floaters span { animation: none; display: none; }
+}
+
+.home-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid rgba(232,180,192,0.5);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 122, 156, 0.12));
+  color: var(--cream);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(255, 122, 156, 0.16), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 1px rgba(255,255,255,0.1);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.home-btn::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+.home-btn__icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+.home-btn__label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream);
+  font-weight: 600;
+}
+
+.home-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  border-color: rgba(255, 122, 156, 0.95);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 122, 156, 0.16));
+  box-shadow: 0 18px 34px rgba(255, 122, 156, 0.22), 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 1px rgba(255,255,255,0.12);
+}
+
+.home-btn:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  z-index: 2;
+}
+
+/* pola bunga + hati + sparkle yang menutupi SELURUH latar belakang halaman
+   (bukan cuma menempel di kartu), diulang (tile) supaya area kosong di
+   sekitar konten juga tidak terasa polos. z-index negatif membuatnya
+   selalu duduk di belakang isi scene. */
+.stage::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.28;
+  background-repeat: repeat;
+  background-size: 230px 230px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg%3E%3Cg transform='translate(45,55)'%3E%3Ccircle r='15' fill='%23c2456b'/%3E%3Ccircle r='10' fill='%23e2607f'/%3E%3Ccircle r='5' fill='%23ffd1de'/%3E%3C/g%3E%3Cpath d='M205,35 C205,28 213,24 218,29 C223,24 231,28 231,35 C231,43 218,52 218,52 C218,52 205,43 205,35 Z' fill='%23ff7a9c'/%3E%3Cg transform='translate(110,175)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3C/g%3E%3Cpath d='M252,120 L256,134 L270,138 L256,142 L252,156 L248,142 L234,138 L248,134 Z' fill='%23fff3f6'/%3E%3Cpath d='M55,235 C55,230 61,227 65,231 C69,227 75,230 75,235 C75,241 65,248 65,248 C65,248 55,241 55,235 Z' fill='none' stroke='%23ff9db3' stroke-width='2'/%3E%3Cg transform='translate(235,255) scale(0.6)'%3E%3Ccircle r='15' fill='%23c2456b'/%3E%3Ccircle r='10' fill='%23e2607f'/%3E%3Ccircle r='5' fill='%23ffd1de'/%3E%3C/g%3E%3Ccircle cx='160' cy='60' r='3' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='20' cy='150' r='2.5' fill='%23fff3f6' opacity='0.7'/%3E%3Ccircle cx='280' cy='60' r='2.5' fill='%23fff3f6' opacity='0.7'/%3E%3Ccircle cx='150' cy='260' r='2.5' fill='%23fff3f6' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+@media (max-width: 480px) {
+  .stage::before { background-size: 170px 170px; opacity: 0.24; }
+}
+
+.scene {
+  display: none;
+  width: 100%;
+  max-width: 460px;
+}
+.scene--active { display: block; animation: scene-pop 0.7s cubic-bezier(.26,1.5,.4,1) both; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* romantic "pop up" page transition — scales in with a soft bounce,
+   like a card being pulled out of an envelope */
+@keyframes scene-pop {
+  0%   { opacity: 0; transform: scale(0.78) translateY(26px) rotate(-1.5deg); }
+  55%  { opacity: 1; transform: scale(1.05) translateY(-6px) rotate(0.5deg); }
+  78%  { transform: scale(0.97) translateY(2px) rotate(0deg); }
+  100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene--active { animation: fade-in 0.3s ease both; }
+}
+
+/* content inside a scene pops in one beat after the scene itself,
+   and grid items cascade in one by one for a livelier reveal */
+.scene--active .gallery__item,
+.scene--active .menu-item,
+.scene--active .timeline__item,
+.scene--active .countdown__unit {
+  opacity: 0;
+  animation: item-pop 0.55s cubic-bezier(.26,1.5,.4,1) both;
+  animation-delay: 0.16s;
+}
+.scene--active .gallery__item:nth-child(2),
+.scene--active .menu-item:nth-child(2) { animation-delay: 0.22s; }
+.scene--active .gallery__item:nth-child(3),
+.scene--active .menu-item:nth-child(3) { animation-delay: 0.28s; }
+.scene--active .gallery__item:nth-child(4),
+.scene--active .menu-item:nth-child(4) { animation-delay: 0.34s; }
+.scene--active .timeline__item:nth-child(2) { animation-delay: 0.24s; }
+.scene--active .timeline__item:nth-child(3) { animation-delay: 0.32s; }
+.scene--active .timeline__item:nth-child(4) { animation-delay: 0.40s; }
+.scene--active .countdown__unit:nth-child(2) { animation-delay: 0.22s; }
+.scene--active .countdown__unit:nth-child(3) { animation-delay: 0.28s; }
+.scene--active .countdown__unit:nth-child(4) { animation-delay: 0.34s; }
+
+@keyframes item-pop {
+  0%   { opacity: 0; transform: scale(0.6) translateY(16px); }
+  65%  { opacity: 1; transform: scale(1.08) translateY(-3px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene--active .gallery__item,
+  .scene--active .menu-item,
+  .scene--active .timeline__item,
+  .scene--active .countdown__unit { animation: none; opacity: 1; }
+}
+
+.scene__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.scene__inner--center { align-items: center; text-align: center; }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--rose);
+  margin: 0;
+  text-transform: lowercase;
+}
+
+.recipient-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(34px, 9vw, 52px);
+  margin: 0 0 8px;
+  color: var(--cream);
+  line-height: 1.1;
+  text-shadow: 0 0 24px rgba(255, 122, 156, 0.35);
+}
+
+.scene-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(24px, 6vw, 32px);
+  margin: 0;
+  line-height: 1.2;
+}
+.scene-title--script { font-style: italic; color: var(--gold); }
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ===== Envelope ===== */
+.envelope {
+  position: relative;
+  width: 220px;
+  height: 150px;
+  margin: 20px auto 6px;
+  cursor: pointer;
+  z-index: 5;
+  pointer-events: auto;
+}
+.envelope__body {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, #5c2247, #33122e);
+  border: 1px solid rgba(232,180,192,0.4);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  box-shadow: 0 12px 30px rgba(194, 69, 107, 0.25);
+}
+.envelope__flap {
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 76px;
+  background: linear-gradient(160deg, #75315f, #3c1636);
+  clip-path: polygon(0 0, 100% 0, 50% 88%);
+  border-radius: 6px 6px 0 0;
+  transform-origin: top center;
+  transition: transform 0.6s cubic-bezier(.6,0,.3,1);
+  z-index: 3;
+}
+.envelope__seal {
+  color: var(--rose);
+  font-size: 26px;
+  z-index: 2;
+}
+.envelope__letter {
+  position: absolute;
+  left: 10px; right: 10px; top: 18px;
+  height: 100px;
+  background: var(--cream);
+  border-radius: 3px;
+  z-index: 0;
+  transition: transform 0.6s cubic-bezier(.6,0,.3,1), opacity 0.6s ease;
+  opacity: 0;
+  transform: translateY(0);
+}
+.envelope--open .envelope__flap {
+  transform: rotateX(180deg);
+}
+.envelope--open .envelope__letter {
+  opacity: 1;
+  transform: translateY(-56px);
+  z-index: 4;
+}
+
+/* ===== Gallery ===== */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.gallery__item {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg-alt);
+  border: 1px solid rgba(232,180,192,0.25);
+}
+.gallery__item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+.gallery__caption {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 6px 8px;
+  font-family: var(--sans);
+}
+
+/* ===== Letter card ===== */
+.letter-card {
+  background: linear-gradient(180deg, #fff3f6, #fbe2e9);
+  color: #4a1f30;
+  border-radius: 4px;
+  padding: 28px 24px;
+  box-shadow: 0 18px 40px rgba(60, 10, 30, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+.letter-v {
+  width: 100%;
+  border-radius: 3px;
+  margin-bottom: 6px;
+  object-fit: cover;
+  max-height: 220px;
+}
+.letter-card .eyebrow { color: var(--rose-deep); }
+.letter-card .scene-title--script { color: #a3355a; }
+.letter-text {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.6;
+  white-space: pre-line;
+  margin: 4px 0;
+}
+.letter-sign {
+  align-self: flex-end;
+  font-family: var(--serif);
+  font-style: italic;
+  color: #a3355a;
+  margin-top: 4px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 13px 26px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.btn--primary {
+  align-self: center;
+  background: linear-gradient(120deg, var(--gold), var(--rose));
+  color: #3c0f24;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(255, 122, 156, 0.35);
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(255, 122, 156, 0.5);
+}
+
+.btn-back {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 4px;
+}
+.btn-back:hover { color: var(--cream); }
+
+/* ===== Menu ===== */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+}
+.menu-item {
+  background: var(--bg-alt);
+  border: 1px solid rgba(232,180,192,0.3);
+  border-radius: 8px;
+  padding: 22px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--cream);
+  transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.menu-item:hover {
+  transform: translateY(-3px);
+  border-color: var(--rose);
+  box-shadow: 0 10px 24px rgba(255, 122, 156, 0.2);
+}
+.menu-item__icon { font-size: 26px; }
+.menu-item__label {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--gold);
+}
+.menu-item__sub { font-size: 11px; color: var(--muted); }
+
+/* di layar laptop/desktop: 4 kotak dibuat menyamping sejajar (bukan 2x2)
+   dan kartunya diperbesar supaya terasa penuh satu layar */
+@media (min-width: 900px) {
+  .scene:has(.menu-grid) {
+    max-width: min(94vw, 1500px);
+  }
+  .menu-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+    margin-top: 18px;
+  }
+  .menu-item {
+    padding: 56px 22px;
+    border-radius: 16px;
+    gap: 10px;
+  }
+  .menu-item:hover {
+    transform: translateY(-6px);
+  }
+  .menu-item__icon { font-size: 50px; }
+  .menu-item__label { font-size: 28px; }
+  .menu-item__sub { font-size: 14px; }
+}
+
+/* ===== Timeline ===== */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border-left: 1px solid rgba(232,180,192,0.35);
+  padding-left: 18px;
+  text-align: left;
+}
+.timeline__item { position: relative; }
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  left: -23px;
+  top: 4px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: 0 0 8px rgba(255, 122, 156, 0.6);
+}
+.timeline__date {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--rose);
+}
+.timeline__title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--cream);
+  margin: 2px 0;
+}
+.timeline__text { font-size: 13px; color: var(--muted); margin: 0; }
+
+/* ===== Countdown ===== */
+.countdown {
+  display: flex;
+  gap: 10px;
+  margin: 6px 0;
+}
+.countdown__unit {
+  background: var(--bg-alt);
+  border: 1px solid rgba(232,180,192,0.3);
+  border-radius: 8px;
+  padding: 14px 10px;
+  min-width: 62px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.countdown__unit span {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--gold);
+}
+.countdown__unit label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ===== Player ===== */
+.player {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(232,180,192,0.3);
+}
+.player video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+}
+
+/* ===== Gift ===== */
+.gift-box {
+  font-size: 64px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  margin-top: 12px;
+  filter: drop-shadow(0 6px 14px rgba(255, 122, 156, 0.35));
+}
+.gift-box:hover { transform: scale(1.08) rotate(-3deg); }
+.gift-box--opened { pointer-events: none; }
+
+.gift-reveal {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.gift-reveal--visible { display: flex; animation: fade-in 0.6s ease; }
+.gift-reveal .letter-text { color: var(--cream); }
+
+/* ===== Heart burst on button tap ===== */
+.heart-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  color: var(--rose);
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0);
+  animation: heart-pop 0.9s cubic-bezier(.17,.89,.32,1.49) forwards;
+  will-change: transform, opacity;
+}
+@keyframes heart-pop {
+  0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0; }
+  15%  { opacity: 1; }
+  60%  { transform: translate(-50%, -85%) scale(1.6); opacity: 1; }
+  100% { transform: translate(-50%, -130%) scale(1.1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heart-burst { animation: none; display: none; }
+}
+
+@media (max-width: 380px) {
+  .countdown { gap: 6px; }
+  .countdown__unit { min-width: 52px; padding: 10px 6px; }
+}
+
+/* ============================================================
+   DEKORASI OTOMATIS — bunga (mawar), love & sparkle
+   Semua dipasang lewat ::before/::after ke elemen yang SUDAH ADA
+   di HTML kamu (.letter-card, .gallery__item, .menu-item,
+   .scene-title--script, .floaters span, .envelope, .gift-box) —
+   jadi langsung muncul, tidak perlu tambah class atau markup baru.
+   ============================================================ */
+
+/* SVG buket mawar (kiri) & satu tangkai mawar besar (kanan) — persis komposisi di video */
+:root {
+  --bouquet-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg%3E%3Cpath d='M100,190 C95,150 90,120 70,95' fill='none' stroke='%234a6b3a' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M100,190 C102,150 108,120 122,98' fill='none' stroke='%233d5a30' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M100,190 C100,155 100,125 100,100' fill='none' stroke='%23557a42' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M75,150 C55,145 45,130 52,112 C65,118 75,132 75,150 Z' fill='%235b7a4a'/%3E%3Cpath d='M120,140 C140,132 148,115 138,100 C124,108 118,124 120,140 Z' fill='%234a6b3a'/%3E%3Cg transform='translate(72,88)'%3E%3Ccircle r='27' fill='%23a3355a'/%3E%3Ccircle r='20' fill='%23c2456b'/%3E%3Ccircle r='13' fill='%23e2607f'/%3E%3Ccircle r='6' fill='%23ffc2d1'/%3E%3C/g%3E%3Cg transform='translate(108,68) scale(0.82)'%3E%3Ccircle r='27' fill='%23c2456b'/%3E%3Ccircle r='20' fill='%23e2607f'/%3E%3Ccircle r='13' fill='%23ff8aa6'/%3E%3Ccircle r='6' fill='%23ffe1e8'/%3E%3C/g%3E%3Cg transform='translate(128,105) scale(0.62)'%3E%3Ccircle r='27' fill='%23a3355a'/%3E%3Ccircle r='20' fill='%23c2456b'/%3E%3Ccircle r='13' fill='%23e2607f'/%3E%3Ccircle r='6' fill='%23ffc2d1'/%3E%3C/g%3E%3Cg transform='translate(88,60) scale(0.5)'%3E%3Ccircle r='27' fill='%23d68fa0'/%3E%3Ccircle r='20' fill='%23e8b4c0'/%3E%3Ccircle r='13' fill='%23ffdbe4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --single-rose-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M60,115 C58,90 55,70 42,55' fill='none' stroke='%234a6b3a' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M45,90 C28,85 20,72 27,58 C38,63 45,75 45,90 Z' fill='%235b7a4a'/%3E%3Cg transform='translate(58,45)'%3E%3Ccircle r='34' fill='%238e2a4c'/%3E%3Ccircle r='26' fill='%23a3355a'/%3E%3Ccircle r='18' fill='%23c2456b'/%3E%3Ccircle r='10' fill='%23e2607f'/%3E%3Ccircle r='4' fill='%23ffc2d1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* --- buket mawar (kiri) & satu mawar besar (kanan) nempel otomatis di kartu surat --- */
+.letter-card { position: relative; overflow: visible; }
+.letter-card::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: -30px;
+  bottom: -16px;
+  background-image: var(--bouquet-svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 8px 14px rgba(30, 5, 15, 0.45));
+  animation: bouquet-sway 5s ease-in-out infinite;
+}
+.letter-card::after {
+  content: '';
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  right: -18px;
+  top: -22px;
+  background-image: var(--single-rose-svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 8px 14px rgba(30, 5, 15, 0.45));
+  animation: bouquet-sway-r 4.5s ease-in-out infinite;
+}
+
+@keyframes bouquet-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+@keyframes bouquet-sway-r {
+  0%, 100% { transform: rotate(3deg); }
+  50%      { transform: rotate(-3deg); }
+}
+@media (max-width: 420px) {
+  .letter-card::before { width: 74px; height: 74px; }
+  .letter-card::after  { width: 54px; height: 54px; }
+}
+
+/* --- foto di dalam surat dibingkai emas berukir & sedikit dimiringkan, ala video --- */
+.letter-v {
+  border: 8px solid;
+  border-image: linear-gradient(150deg, #f6dfa0, #b8862f 45%, #f6dfa0 75%, #8a5f1f) 1;
+  outline: 2px solid #3c2a10;
+  outline-offset: -10px;
+  transform: rotate(2deg);
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.45);
+}
+
+/* --- kamera vintage kecil, nongol di dekat tanda tangan surat (seperti di video) --- */
+.letter-sign { position: relative; }
+.letter-sign::after {
+  content: '📷';
+  position: absolute;
+  right: -6px;
+  bottom: -30px;
+  font-size: 30px;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.45)) grayscale(0.15);
+  transform: rotate(-6deg);
+}
+
+/* --- foto galeri jadi terasa "dibingkai emas" tanpa markup baru --- */
+.gallery__item {
+  padding: 6px;
+  background: linear-gradient(150deg, #f6dfa0, #b8862f 45%, #f6dfa0 75%, #8a5f1f);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
+}
+.gallery__item img {
+  border-radius: 2px;
+  border: 2px solid #3c2a10;
+}
+.gallery__caption { background: rgba(43, 15, 30, 0.55); border-radius: 2px; }
+
+/* --- bunga kecil menghiasi tiap item menu, plus kilauan emas di belakang ikon
+       (persis efek starburst di scene "Choose the Surprise") --- */
+.menu-item { position: relative; }
+.menu-item::after {
+  content: '🌸';
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 16px;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+.menu-item__icon { position: relative; display: inline-flex; }
+.menu-item__icon::before {
+  content: '';
+  position: absolute;
+  width: 220%;
+  height: 220%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,224,150,0.85) 0%, rgba(255,122,156,0.4) 40%, transparent 72%);
+  z-index: -1;
+  animation: sparkle-pulse 2.2s ease-in-out infinite;
+}
+
+/* --- kilauan sparkle di belakang judul bergaya script --- */
+.scene-title--script { position: relative; display: inline-block; }
+.scene-title--script::before {
+  content: '';
+  position: absolute;
+  width: 160%;
+  height: 220%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,122,156,0.5) 35%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: sparkle-pulse 2.4s ease-in-out infinite;
+}
+@keyframes sparkle-pulse {
+  0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85) rotate(0deg); }
+  50%      { opacity: 0.85; transform: translate(-50%, -50%) scale(1.15) rotate(20deg); }
+}
+
+/* --- versi lebih elegan, khusus judul di scene Gift ("Untuk Orang Spesial") ---
+   aura keemasan yang bernapas pelan, dilapis sapuan cahaya tipis berputar
+   di belakangnya — lebih halus & premium dibanding sparkle-pulse biasa. */
+.gift-reveal .scene-title--script {
+  background: linear-gradient(120deg, var(--cream) 0%, #f6dfa0 25%, var(--rose) 50%, #f6dfa0 75%, var(--cream) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(255, 122, 156, 0.45));
+  animation: shimmer-text 5s ease-in-out infinite;
+}
+
+.gift-reveal .scene-title--script::before {
+  width: 200%;
+  height: 260%;
+  background: radial-gradient(circle, rgba(255,243,246,0.9) 0%, rgba(246,223,160,0.5) 30%, rgba(255,122,156,0.3) 55%, transparent 75%);
+  animation: elegant-glow 4.5s cubic-bezier(.45,0,.55,1) infinite;
+}
+
+.gift-reveal .scene-title--script::after {
+  content: '';
+  position: absolute;
+  width: 240%;
+  height: 240%;
+  left: 50%;
+  top: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 260'%3E%3Cg transform='rotate(0 130 130) translate(130 28)'%3E%3Cg transform='scale(0.46)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(45 130 130) translate(130 28)'%3E%3Cg transform='scale(0.36)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(90 130 130) translate(130 28)'%3E%3Cg transform='scale(0.50)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(135 130 130) translate(130 28)'%3E%3Cg transform='scale(0.36)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(180 130 130) translate(130 28)'%3E%3Cg transform='scale(0.46)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(225 130 130) translate(130 28)'%3E%3Cg transform='scale(0.36)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(270 130 130) translate(130 28)'%3E%3Cg transform='scale(0.50)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(315 130 130) translate(130 28)'%3E%3Cg transform='scale(0.36)'%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(72)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(144)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(216)'/%3E%3Cellipse rx='9' ry='14' cy='-13' fill='%23e8b4c0' transform='rotate(288)'/%3E%3Ccircle r='6' fill='%23d68fa0'/%3E%3Ccircle r='2.6' fill='%23fff3f6' opacity='0.9'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(22.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(67.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(112.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(157.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(202.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(247.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(292.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Cg transform='rotate(337.5 130 130) translate(130 40) scale(0.8)'%3E%3Cpath d='M0,4 C-7,0 -7,-9 0,-14 C7,-9 7,0 0,4 Z' fill='%235b7a4a' opacity='0.85'/%3E%3C/g%3E%3Ccircle cx='130' cy='18' r='2.2' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='196' cy='52' r='1.6' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='196' cy='208' r='2.2' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='130' cy='242' r='1.6' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='64' cy='208' r='2.2' fill='%23fff3f6' opacity='0.8'/%3E%3Ccircle cx='64' cy='52' r='1.6' fill='%23fff3f6' opacity='0.8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 122, 156, 0.4));
+  pointer-events: none;
+  z-index: -1;
+  animation: flower-ring-spin 26s cubic-bezier(.45,0,.55,1) infinite;
+}
+
+@keyframes elegant-glow {
+  0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.94); }
+  50%      { opacity: 0.9; transform: translate(-50%, -50%) scale(1.08); }
+}
+@keyframes flower-ring-spin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg)   scale(0.95); }
+  25%  { transform: translate(-50%, -50%) rotate(90deg)  scale(1.03); }
+  50%  { transform: translate(-50%, -50%) rotate(180deg) scale(0.97); }
+  75%  { transform: translate(-50%, -50%) rotate(270deg) scale(1.03); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(0.95); }
+}
+@keyframes shimmer-text {
+  to { background-position: -200% center; }
+}
+
+/* --- amplop dihiasi bunga & love kecil di sampingnya --- */
+.envelope { position: relative; }
+.envelope::before {
+  content: '🌷';
+  position: absolute;
+  left: -34px;
+  bottom: 4px;
+  font-size: 26px;
+  animation: bouquet-sway 4s ease-in-out infinite;
+}
+.envelope::after {
+  content: '💗';
+  position: absolute;
+  right: -30px;
+  top: 10px;
+  font-size: 20px;
+  animation: bouquet-sway-r 4.5s ease-in-out infinite;
+}
+
+/* --- floating hearts & bunga bercampur (bukan hati polos saja) --- */
+.floaters span {
+  font-size: 0; /* sembunyikan teks lama, tampilkan lewat ::before di bawah */
+}
+.floaters span::before {
+  font-size: 18px;
+  content: '♥';
+}
+.floaters span:nth-child(1)::before { content: '🌸'; font-size: 14px; }
+.floaters span:nth-child(2)::before { content: '💗'; font-size: 22px; }
+.floaters span:nth-child(3)::before { content: '✨'; font-size: 12px; }
+.floaters span:nth-child(4)::before { content: '🌹'; font-size: 20px; }
+.floaters span:nth-child(5)::before { content: '♥';  font-size: 15px; }
+
+/* --- gift box: sedikit melayang supaya terasa "ajak dibuka" --- */
+.gift-box:not(.gift-box--opened) {
+  animation: gift-float 2.4s ease-in-out infinite;
+}
+.gift-box:hover { animation-play-state: paused; }
+@keyframes gift-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-6px) rotate(-4deg); }
+}
+
+/* --- radio, TV & nada musik menghiasi area player video/lagu, seperti di video --- */
+.player { position: relative; margin-top: 6px; }
+.player::before {
+  content: '📻';
+  position: absolute;
+  left: -6px;
+  bottom: -34px;
+  font-size: 28px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
+.player::after {
+  content: '🎵 🎶 ✨';
+  position: absolute;
+  right: -4px;
+  bottom: -30px;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #8fd8ff;
+  text-shadow: 0 0 8px rgba(143, 216, 255, 0.9), 0 0 16px rgba(143, 216, 255, 0.5);
+  animation: note-bob 2s ease-in-out infinite;
+}
+@keyframes note-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter-card::before, .letter-card::after,
+  .scene-title--script::before,
+  .menu-item__icon::before,
+  .envelope::before, .envelope::after,
+  .player::after,
+  .gift-box:not(.gift-box--opened),
+  .gift-reveal .scene-title--script,
+  .gift-reveal .scene-title--script::before,
+  .gift-reveal .scene-title--script::after { animation: none; }
+}

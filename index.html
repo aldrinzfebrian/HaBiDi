@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SPECIAL GIFT FOR U BB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<button class="home-btn" data-home="true" aria-label="Kembali ke awal">
+  <span class="home-btn__icon">⌂</span>
+  <span class="home-btn__label">Home</span>
+</button>
+<div class="grain"></div>
+<div class="stage" id="stage">
+
+  <!-- ===================== 1. COVER / ENVELOPE ===================== -->
+  <section class="scene scene--active" data-scene="cover">
+    <div class="scene__inner scene__inner--center">
+      <p class="eyebrow">THIS IS FOR U BB!!!</p>
+      <h1 class="recipient-name" id="recipientNameCover"> MARIA REVALINA SITOMPUL </h1>
+      <div class="envelope" id="envelope" onclick="burstHeart(this)">
+        <div class="envelope__flap"></div>
+        <div class="envelope__body">
+          <div class="envelope__seal">♥</div>
+        </div>
+        <div class="envelope__letter" id="envelopeLetter"></div>
+      </div>
+      <p class="hint">TEKAN AMPLOP INI SAYANGG</p>
+    </div>
+  </section>
+
+  <!-- ===================== 2. GALLERY ===================== -->
+  <section class="scene" data-scene="gallery">
+    <div class="scene__inner">
+      <p class="eyebrow">KILAS BALIK</p>
+      <h2 class="scene-title">MOMEN MOMEN KITAA NIHH, WALAU ONLINE WKAKAK</h2>
+      <div class="gallery" id="galleryGrid"></div>
+      <button class="btn btn--primary" onclick="nextScene(); burstHeart(this)">LANJUT DISINI YAA CEBOLL AKUUU</button>
+    </div>
+  </section>
+
+  <!-- ===================== 3. LETTER ===================== -->
+  <section class="scene" data-scene="letter">
+    <div class="scene__inner">
+      <div class="letter-card">
+        <video class="letter-video" src="video beliau juga.mp4" controls autoplay></video>
+        <p class="eyebrow">for</p>
+        <h2 class="scene-title scene-title--script" id="letterName">MARIA REVALINA SITOMPUL</h2>
+        <p class="letter-text" id="letterText"></p>
+        <p class="letter-sign" id="letterSign"></p>
+      </div>
+      <button class="btn btn--primary" data-next="menu" onclick="burstHeart(this)">BUKA BUKA BUKAAA &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ===================== 4. SURPRISE MENU ===================== -->
+  <section class="scene" data-scene="menu">
+    <div class="scene__inner">
+      <button class="btn-back" data-back="true">&larr; BALIKK DISINI</button>
+      <p class="eyebrow">Pilih Satu yawww</p>
+      <h2 class="scene-title">YANG MANA DULU MAU KAMU BUKA SAYANG?<br></h2>
+      <p>*saran aku playlist sih, biar buka yg lain sambil dengarin lagu xixi</p>
+      <div class="menu-grid">
+        <button class="menu-item" data-next="journey">
+          <span class="menu-item__icon">🧭</span>
+          <span class="menu-item__label">Journey</span>
+          <span class="menu-item__sub">Perjalanan Kita</span>
+        </button>
+        <button class="menu-item" data-next="moment">
+          <span class="menu-item__icon">⏳</span>
+          <span class="menu-item__label">Moment</span>
+          <span class="menu-item__sub">Detik Detik sebelum Menit</span>
+        </button>
+        <button class="menu-item" data-next="playlist">
+          <span class="menu-item__icon">🎵</span>
+          <span class="menu-item__label">Playlist</span>
+          <span class="menu-item__sub">Lagu Untuk Kamuu</span>
+        </button>
+        <button class="menu-item" data-next="gift">
+          <span class="menu-item__icon">🎁</span>
+          <span class="menu-item__label">Gift</span>
+          <span class="menu-item__sub">LAST DEH LAST<br> <i>sebelum kesini, matiin dulu yaa playlistnyaa</i> </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4a. JOURNEY ===================== -->
+  <section class="scene" data-scene="journey">
+    <div class="scene__inner">
+      <div style="display:flex; justify-content:space-between; gap:12px;">
+        <button class="btn-back" data-back="true">&larr; BALIKKK </button>
+        <button class="btn-back" data-next="menu">Menu utama</button>
+      </div>
+      <p class="eyebrow">Journey</p>
+      <h2 class="scene-title">Perjalanan kita</h2>
+      <div class="timeline" id="timelineList"></div>
+    </div>
+  </section>
+
+  <!-- ===================== 4b. MOMENT ===================== -->
+  <section class="scene" data-scene="moment">
+    <div class="scene__inner scene__inner--center">
+      <div style="display:flex; justify-content:space-between; gap:12px; width:100%;">
+        <button class="btn-back" data-back="true">&larr; BALIKKK </button>
+        <button class="btn-back" data-next="menu">Menu utama</button>
+      </div>
+      <p class="eyebrow">Moment</p>
+      <h2 class="scene-title" id="momentLabel">Menuju hari spesial</h2>
+      <div class="countdown" id="countdown">
+        <div class="countdown__unit"><span id="cdDays">00</span><label>hari</label></div>
+        <div class="countdown__unit"><span id="cdHours">00</span><label>jam</label></div>
+        <div class="countdown__unit"><span id="cdMinutes">00</span><label>menit</label></div>
+        <div class="countdown__unit"><span id="cdSeconds">00</span><label>detik</label></div>
+      </div>
+      <p class="letter-text" id="momentNote"></p>
+    </div>
+  </section>
+
+  <!-- ===================== 4c. PLAYLIST ===================== -->
+  <section class="scene" data-scene="playlist">
+    <div class="scene__inner scene__inner--center">
+      <div style="display:flex; justify-content:space-between; gap:12px; width:100%;">
+        <button class="btn-back" data-back="true">&larr; BALIKKK</button>
+        <button class="btn-back" data-next="menu">Menu utama</button>
+      </div>
+      <p class="eyebrow">Playlist</p>
+      <h2 class="scene-title" id="songTitle">LAGU UNTUK KAMU SENGGGG!!</h2>
+      <div class="player">
+          <video id="songVideo" src="videoplayback.mp4" controls></video>
+      </div>
+      <p class="letter-text" id="songNote"></p>
+    </div>
+  </section>
+
+  <!-- ===================== 4d. GIFT ===================== -->
+  <section class="scene" data-scene="gift">
+    <div class="scene__inner scene__inner--center">
+      <div style="display:flex; justify-content:space-between; gap:12px; width:100%;">
+        <button class="btn-back" data-back="true">&larr; BALIKKK </button>
+        <button class="btn-back" data-next="menu">Menu utama</button>
+      </div>
+      <div class="gift-box" id="giftBox" onclick="burstHeart(this)">
+        <span>🎁</span>
+      </div>
+      <p class="hint" id="giftHint">TEKAN KADONYA SAYANGG</p>
+      <div class="gift-reveal" id="giftReveal">
+        <video id="myVideo" src="vid beliau.mp4" controls></video>
+        <h2 class="scene-title scene-title--script">UNTUK ORANG SPESIAAALL</h2>
+        <p class="letter-text" id="giftText"></p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script>
+function burstHeart(el) {
+  const rect = el.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top;
+  for (let i = 0; i < 6; i++) {
+    const heart = document.createElement('span');
+    heart.className = 'heart-burst';
+    heart.textContent = '♥';
+    heart.style.fontSize = (14 + Math.random() * 16) + 'px';
+    heart.style.left = (x + (Math.random() * 50 - 25)) + 'px';
+    heart.style.top = y + 'px';
+    heart.style.animationDelay = (i * 0.06) + 's';
+    document.body.appendChild(heart);
+    heart.addEventListener('animationend', () => heart.remove());
+  }
+}
+</script>
+</body>
+</html>
