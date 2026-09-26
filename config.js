@@ -19,7 +19,7 @@ const CONFIG = {
     { src: "chat pertama.jpeg", caption: "Pertama kali kenal ni yee" },
     { src: "foto pertama dia.jpeg", caption: "PAP PERTAMA KAMUU SENG" },
     { src: "ss chat.jpeg", caption: "SAI LALAP BAHAS BERAKK" },
-    { src: "https://placehold.co/400x500/2e1530/d4af6a?text=Foto+4", caption: "Hari yang tak terlupakan" },
+    { src: "photobooth 4.jpeg", caption: "LUCUUU SANGATTT KANNN" },
   ],
 
   // ---------- SURAT / PESAN ----------
